@@ -56,7 +56,7 @@ const Fabric = () => {
       const objects = canvas.getObjects().map(obj => ({
         type: obj.type || "unknown",
         object: obj,
-      }));
+      })) as any;
       setShapes(objects);
     };
   

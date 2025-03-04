@@ -6,7 +6,7 @@ import { FiCircle, FiSquare, FiTriangle } from "react-icons/fi";
 interface Props {
   shapes: Shape[];
   canvas: any;
-  setShapes: (value: React.SetStateAction<never[]>) => void
+  setShapes: any;
 }
 
 const LayersComponent = ({ shapes, canvas, setShapes}: Props) => {
