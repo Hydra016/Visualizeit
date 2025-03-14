@@ -10,6 +10,7 @@ import React, { useRef, useState, useEffect } from "react";
 import Settings from "./Settings";
 import Controls from "./Controls";
 import LayersComponent from "./LayersComponent";
+import uuid from "react-uuid";
 
 const Fabric = () => {
   const canvasRef = useRef(null);
@@ -20,7 +21,7 @@ const Fabric = () => {
   const [height, setHeight] = useState<number>(0);
   const [diameter, setDiameter] = useState<number>(0);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [canvasBgColor, setCanvasBgColor] = useState<string>("#fff");
+  const [canvasBgColor, setCanvasBgColor] = useState<string>("#ffffff");
 
   const [color, setColor] = useState("#DB4D42");
   const [shadow, setShadow] = useState({
@@ -51,26 +52,25 @@ const Fabric = () => {
 
   useEffect(() => {
     if (!canvas) return;
-  
+
     const updateShapes = () => {
-      const objects = canvas.getObjects().map(obj => ({
+      const objects = canvas.getObjects().map((obj) => ({
         type: obj.type || "unknown",
         object: obj,
       })) as any;
       setShapes(objects);
     };
-  
+
     canvas.on("object:added", updateShapes);
     canvas.on("object:removed", updateShapes);
     canvas.on("object:modified", updateShapes);
-  
+
     return () => {
       canvas.off("object:added", updateShapes);
       canvas.off("object:removed", updateShapes);
       canvas.off("object:modified", updateShapes);
     };
   }, [canvas]);
-  
 
   const addRectangle = () => {
     if (canvas) {
@@ -96,6 +96,7 @@ const Fabric = () => {
             throw new Error("Function not implemented.");
           },
         },
+        id: uuid(),
       });
 
       canvas.add(rect);
@@ -125,6 +126,7 @@ const Fabric = () => {
             throw new Error("Function not implemented.");
           },
         },
+        id: uuid(),
       });
 
       canvas.add(circle);
@@ -140,7 +142,7 @@ const Fabric = () => {
         width: 100,
         height: 100,
         shadow: {
-          color: "rgba(255, 255, 255, 0)",
+          color: "rgba(0, 0, 0, 0)",
           blur: 0,
           offsetX: 0,
           offsetY: 0,
@@ -155,6 +157,7 @@ const Fabric = () => {
             throw new Error("Function not implemented.");
           },
         },
+        id: uuid(),
       });
 
       canvas.add(triangle);
@@ -233,13 +236,13 @@ const Fabric = () => {
         addRectangle={addRectangle}
         addCircle={addCircle}
         addTriangle={addTriangle}
-
       />
       <div className="flex gap-10">
         <LayersComponent
           canvas={canvas}
           shapes={shapes}
           setShapes={setShapes}
+          selectedObject={selectedObject}
         />
         <canvas id="canvas" ref={canvasRef} />
         <Settings
