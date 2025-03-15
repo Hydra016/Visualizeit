@@ -1,16 +1,8 @@
-import {
-  Canvas,
-  Circle,
-  FabricObject,
-  Rect,
-  SerializedShadowOptions,
-  Triangle,
-} from "fabric";
+import { Canvas } from "fabric";
 import React, { useRef, useState, useEffect } from "react";
 import Settings from "./Settings";
 import Controls from "./Controls";
 import LayersComponent from "./LayersComponent";
-import uuid from "react-uuid";
 
 const Fabric = () => {
   const canvasRef = useRef(null);
@@ -71,98 +63,6 @@ const Fabric = () => {
       canvas.off("object:modified", updateShapes);
     };
   }, [canvas]);
-
-  const addRectangle = () => {
-    if (canvas) {
-      const rect = new Rect({
-        top: 100,
-        left: 50,
-        width: 100,
-        height: 60,
-        fill: "#DB4D42",
-        shadow: {
-          color: "rgba(255, 255, 255, 0)",
-          blur: 0,
-          offsetX: 0,
-          offsetY: 0,
-          affectStroke: false,
-          includeDefaultValues: false,
-          nonScaling: false,
-          id: 0,
-          toSVG: function (object: FabricObject): string {
-            throw new Error("Function not implemented.");
-          },
-          toObject: function (): Partial<SerializedShadowOptions> {
-            throw new Error("Function not implemented.");
-          },
-        },
-        id: uuid(),
-      });
-
-      canvas.add(rect);
-    }
-  };
-
-  const addCircle = () => {
-    if (canvas) {
-      const circle = new Circle({
-        top: 100,
-        left: 50,
-        radius: 50,
-        fill: "#DB4D42",
-        shadow: {
-          color: "rgba(255, 255, 255, 0)",
-          blur: 0,
-          offsetX: 0,
-          offsetY: 0,
-          affectStroke: false,
-          includeDefaultValues: false,
-          nonScaling: false,
-          id: 0,
-          toSVG: function (object: FabricObject): string {
-            throw new Error("Function not implemented.");
-          },
-          toObject: function (): Partial<SerializedShadowOptions> {
-            throw new Error("Function not implemented.");
-          },
-        },
-        id: uuid(),
-      });
-
-      canvas.add(circle);
-    }
-  };
-
-  const addTriangle = () => {
-    if (canvas) {
-      const triangle = new Triangle({
-        top: 100,
-        left: 50,
-        fill: "#DB4D42",
-        width: 100,
-        height: 100,
-        shadow: {
-          color: "rgba(0, 0, 0, 0)",
-          blur: 0,
-          offsetX: 0,
-          offsetY: 0,
-          affectStroke: false,
-          includeDefaultValues: false,
-          nonScaling: false,
-          id: 0,
-          toSVG: function (object: FabricObject): string {
-            throw new Error("Function not implemented.");
-          },
-          toObject: function (): Partial<SerializedShadowOptions> {
-            throw new Error("Function not implemented.");
-          },
-        },
-        id: uuid(),
-      });
-
-      canvas.add(triangle);
-    }
-  };
 
   useEffect(() => {
     if (!canvas) return;
@@ -232,11 +132,7 @@ const Fabric = () => {
 
   return (
     <div className="flex flex-col">
-      <Controls
-        addRectangle={addRectangle}
-        addCircle={addCircle}
-        addTriangle={addTriangle}
-      />
+      <Controls canvas={canvas} />
       <div className="flex gap-10">
         <LayersComponent
           canvas={canvas}

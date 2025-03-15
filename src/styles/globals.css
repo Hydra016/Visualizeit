@@ -112,3 +112,15 @@ input[type="color"]::-webkit-color-swatch-wrapper {
 input[type="color"]::-webkit-color-swatch {
   border: none;
 }
+
+.layer-arrows--hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.layer-arrows--show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+

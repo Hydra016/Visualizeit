@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { RxHeight, RxWidth, RxColorWheel, RxShadow } from "react-icons/rx";
 import { LuDiameter, LuTrash } from "react-icons/lu";
+import { FaBold, FaItalic } from "react-icons/fa";
+import { RiFontFamily } from "react-icons/ri";
+import Slider from "@/components/ui/Slider";
 
 type Shadow = {
   color: string;
@@ -32,6 +35,7 @@ interface Props {
   deleteObject: (object: any) => void;
   enableShadow: (e: React.ChangeEvent<HTMLInputElement>) => void;
   shadowEnabled: boolean;
+  canvas: any;
 }
 
 const Config = ({
@@ -53,7 +57,59 @@ const Config = ({
   handleCanvascolorChange,
   enableShadow,
   shadowEnabled,
+  canvas,
 }: Props) => {
+  const [fontSize, setFontSize] = React.useState(
+    selectedObject?.fontSize || 16
+  );
+  const [fontFamily, setFontFamily] = React.useState(
+    selectedObject?.fontFamily || "Arial"
+  );
+
+  const [fontWeight, setFontWeight] = React.useState(
+    selectedObject?.fontWeight || "normal"
+  );
+  const [fontStyle, setFontStyle] = React.useState(
+    selectedObject?.fontStyle || "normal"
+  );
+
+  useEffect(() => {
+    if (selectedObject) {
+      setFontSize(selectedObject.fontSize || 16);
+      setFontFamily(selectedObject.fontFamily || "Arial");
+      setFontWeight(selectedObject.fontWeight || "normal");
+      setFontStyle(selectedObject.fontStyle || "normal");
+    }
+  }, [selectedObject]);
+
+  useEffect(() => {
+    const newSize = parseInt(fontSize, 10);
+    const newFontFamily = fontFamily;
+    if (selectedObject) {
+      selectedObject.set("fontSize", newSize);
+      selectedObject.set("fontFamily", newFontFamily);
+      selectedObject.set("fontWeight", fontWeight);
+      selectedObject.set("fontStyle", fontStyle);
+      canvas.renderAll();
+    }
+
+    console.log("font weight: " + fontWeight);
+  }, [fontSize, selectedObject, canvas, fontFamily, fontWeight, fontStyle]);
+
+  const handleFontStyle = (style: string) => {
+    if (style === "bold") {
+      setFontWeight("bold");
+      selectedObject.set("fontWeight", "bold");
+    } else if (style === "italic") {
+      setFontWeight("italic");
+      selectedObject.set("fontStyle", "italic");
+    } else {
+      setFontWeight("normal");
+      selectedObject.set("fontWeight", "normal");
+    }
+    canvas.renderAll();
+  };
+
   return (
     <div className="flex flex-col gap-3 mt-3 h-full w-[250px]">
       <div>
@@ -129,15 +185,17 @@ const Config = ({
           </div>
 
           <div className="text-white border-t border-gray-500 py-5">
-            <div className="flex items-center justify-between">
-              <span>Shadow</span>
-              <input
-                onChange={enableShadow}
-                type="checkbox"
-                className="w-5 h-5 cursor-pointer rounded-md border-none"
-                checked={selectedObject?.shadowEnabled || false}
-              />
-            </div>
+            {type !== "textbox" && (
+              <div className="flex items-center justify-between">
+                <span>Shadow</span>
+                <input
+                  onChange={enableShadow}
+                  type="checkbox"
+                  className="w-5 h-5 cursor-pointer rounded-md border-none"
+                  checked={selectedObject?.shadowEnabled || false}
+                />
+              </div>
+            )}
 
             {selectedObject?.shadowEnabled && (
               <>
@@ -155,45 +213,107 @@ const Config = ({
                   <RxShadow />
                 </div>
 
-                <div>
-                  <span>Blur</span>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    step="1"
-                    value={shadow.blur}
-                    onChange={handleShadowBlurChange}
-                    className="w-full"
-                  />
-                </div>
+                <Slider
+                  minVal={0}
+                  maxVal={100}
+                  value={shadow.blur}
+                  callBack={handleShadowBlurChange}
+                  label="Blur"
+                />
 
-                <div>
-                  <span>Offset X</span>
-                  <input
-                    type="range"
-                    min="-100"
-                    max="100"
-                    step="1"
-                    value={shadow.offsetX}
-                    onChange={handleShadowOffsetXChange}
-                    className="w-full"
-                  />
-                </div>
+                <Slider
+                  minVal={-100}
+                  maxVal={100}
+                  value={shadow.offsetX}
+                  callBack={handleShadowOffsetXChange}
+                  label="Offset X"
+                />
 
-                <div>
-                  <span>Offset Y</span>
-                  <input
-                    type="range"
-                    min="-100"
-                    max="100"
-                    step="1"
-                    value={shadow.offsetY}
-                    onChange={handleShadowOffsetYChange}
-                    className="w-full"
-                  />
-                </div>
+                <Slider
+                  minVal={-100}
+                  maxVal={100}
+                  value={shadow.offsetY}
+                  callBack={handleShadowOffsetYChange}
+                  label="Offset Y"
+                />
               </>
+            )}
+
+            {type === "textbox" && (
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <label>Font size</label>
+                  <input
+                    onChange={(e: any) => setFontSize(e.target.value)}
+                    type="number"
+                    value={fontSize}
+                    className="w-10 text-black"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <label>Font Family</label>
+                  <select
+                    onChange={(e) => setFontFamily(e.target.value)}
+                    className="text-black"
+                  >
+                    {[
+                      "Arial",
+                      "Verdana",
+                      "Helvetica",
+                      "Tahoma",
+                      "Trebuchet MS",
+                      "Times New Roman",
+                      "Georgia",
+                      "Garamond",
+                      "Courier New",
+                      "Brush Script MT",
+                    ].map((font) => (
+                      <option key={font} value={font}>
+                        {font}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <label>Font Style</label>
+                  <div className="flex gap-3">
+                    <div
+                      className={`${
+                        fontWeight === "normal" && fontStyle === "normal"
+                          ? "bg-gray-500"
+                          : ""
+                      } p-2 rounded-md`}
+                    >
+                      <RiFontFamily
+                        onClick={() => handleFontStyle("normal")}
+                        className="cursor-pointer"
+                      />
+                    </div>
+                    <div
+                      className={`${
+                        fontWeight === "bold" ? "bg-gray-500" : ""
+                      } p-2 rounded-md`}
+                    >
+                      <FaBold
+                        onClick={() => handleFontStyle("bold")}
+                        className="cursor-pointer"
+                      />
+                    </div>
+                    <div
+                      className={`${
+                        fontWeight === "italic" ? "bg-gray-500" : ""
+                      } p-2 rounded-md`}
+                    >
+                      <FaItalic
+                        onClick={() => handleFontStyle("italic")}
+                        className="cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         </>

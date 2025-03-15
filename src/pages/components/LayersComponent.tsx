@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FiArrowDown, FiArrowUp } from "react-icons/fi";
 import { Shape } from "../../types";
-import { FiCircle, FiSquare, FiTriangle } from "react-icons/fi";
+import { FiCircle, FiSquare, FiTriangle, FiImage } from "react-icons/fi";
+import { IoText } from "react-icons/io5";
 
 interface Props {
   shapes: Shape[];
@@ -33,6 +34,10 @@ const LayersComponent = ({
         return <FiCircle />;
       case "triangle":
         return <FiTriangle />;
+      case "textbox":
+        return <IoText />;
+      case "image":
+        return <FiImage />;
     }
   };
 
@@ -80,22 +85,18 @@ const LayersComponent = ({
     }
   };
 
+  const selectObject = (object: any) => {
+    if (canvas) {
+      canvas.setActiveObject(object);
+      canvas.renderAll();
+      setActiveObject(object);
+    }
+  };
+
   return (
-    <div className="flex flex-col h-fit pb-3 px-3 rounded bg-gray-800">
+    <div className="flex flex-col h-fit pb-3 px-3 rounded bg-gray-800 w-[250px]">
       <div className="flex items-center justify-center gap-10">
         <span className="py-3 text-xl font-semibold text-white">Layers</span>
-        <div className="flex gap-3">
-          <FiArrowUp
-            className="cursor-pointer"
-            onClick={() => bringForward()}
-            color="#fff"
-          />
-          <FiArrowDown
-            className="cursor-pointer"
-            onClick={() => sendBackward()}
-            color="#fff"
-          />
-        </div>
       </div>
       <div className="border-b border-gray-500"></div>
 
@@ -107,22 +108,45 @@ const LayersComponent = ({
             .map((shape: any) => {
               return (
                 <div
-                  className={`flex gap-2 items-center p-2 ${
+                  className={`flex items-center justify-between gap-6 p-2 cursor-pointer hover:bg-gray-500 rounded layer ${
                     shape.object &&
                     activeObject &&
                     activeObject.id === shape.object.id
                       ? "bg-gray-500 rounded"
                       : ""
                   }`}
+                  onClick={() => {
+                    selectObject(shape.object);
+                  }}
                   key={shape.id}
                 >
-                  {renderShapeIcon(shape.type as string)}
-                  <span>{shape.type}</span>
+                  <div className="flex items-center gap-2">
+                    {renderShapeIcon(shape.type)}
+                    <span className="capitalize">{shape.type}</span>
+                  </div>
+                  <div className={`flex gap-1 ${ 
+                    shape.object &&
+                    activeObject &&
+                    activeObject.id === shape.object.id
+                      ? "layer-arrows--show "
+                      : "layer-arrows--hide"
+                  }`}>
+                    <FiArrowUp
+                      className="cursor-pointer"
+                      onClick={() => bringForward()}
+                      color="#fff"
+                    />
+                    <FiArrowDown
+                      className="cursor-pointer"
+                      onClick={() => sendBackward()}
+                      color="#fff"
+                    />
+                  </div>
                 </div>
               );
             })
         ) : (
-          <div>Canvas is empty</div>
+          <div className="flex justify-center">Canvas is empty</div>
         )}
       </div>
     </div>

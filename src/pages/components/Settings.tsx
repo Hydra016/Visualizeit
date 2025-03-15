@@ -161,6 +161,8 @@ const Settings = ({
     }
   };
 
+  
+
   return (
     <div className="bg-gray-800 min-h-full flex flex-col rounded px-3">
       <div className="flex items-center justify-between gap-10">
@@ -193,6 +195,7 @@ const Settings = ({
         deleteObject={deleteObject}
         enableShadow={enableShadow}
         shadowEnabled={shadowEnabled}
+        canvas={canvas}
       />
     </div>
   );
