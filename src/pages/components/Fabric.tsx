@@ -143,10 +143,6 @@ const Fabric = () => {
     link.click();
   };
 
-  if(canvas) {
-    canvas.defaultCursor = 'url(/Cursor.svg), auto';
-  }
-
   return (
     <div className="flex flex-col">
       <div className="flex justify-between">
