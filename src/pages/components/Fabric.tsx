@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from "react";
 import Settings from "./Settings";
 import Controls from "./Controls";
 import LayersComponent from "./LayersComponent";
+import { MdDownload } from "react-icons/md";
 
 const Fabric = () => {
   const canvasRef = useRef(null);
@@ -30,7 +31,6 @@ const Fabric = () => {
         height: 500,
       });
 
-      // initCanvas.backgroundColor = "#1f2937";
       initCanvas.backgroundColor = canvasBgColor;
       initCanvas.renderAll();
 
@@ -130,9 +130,32 @@ const Fabric = () => {
     setPosition({ x: 0, y: 0 });
   };
 
+  const handleDownload = () => {
+    if (!canvas) return;
+    const dataURL = canvas.toDataURL({
+      format: 'png',
+      quality: 1.0,
+      multiplier: 1.0
+    });
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'canvas.png';
+    link.click();
+  };
+
   return (
     <div className="flex flex-col">
-      <Controls canvas={canvas} />
+      <div className="flex justify-between">
+        <Controls canvas={canvas} />
+        <div
+          className="flex justify-center items-center bg-gray-800 mb-5 rounded w-fit text-white px-5 py-1 cursor-pointer"
+          onClick={handleDownload}
+        >
+          <MdDownload size={20} />
+          <span className="ml-2">Download</span>
+        </div>
+      </div>
+
       <div className="flex gap-10">
         <LayersComponent
           canvas={canvas}

@@ -72,6 +72,7 @@ const Config = ({
   const [fontStyle, setFontStyle] = React.useState(
     selectedObject?.fontStyle || "normal"
   );
+  const [imageFill, setImageFill] = React.useState(false);
 
   useEffect(() => {
     if (selectedObject) {
@@ -79,8 +80,14 @@ const Config = ({
       setFontFamily(selectedObject.fontFamily || "Arial");
       setFontWeight(selectedObject.fontWeight || "normal");
       setFontStyle(selectedObject.fontStyle || "normal");
+      if (type === "image") {
+        setImageFill(
+          selectedObject.scaleX === canvas.width / selectedObject.width &&
+          selectedObject.scaleY === canvas.height / selectedObject.height
+        );
+      }
     }
-  }, [selectedObject]);
+  }, [selectedObject, type, canvas]);
 
   useEffect(() => {
     const newSize = parseInt(fontSize, 10);
@@ -106,6 +113,24 @@ const Config = ({
     } else {
       setFontWeight("normal");
       selectedObject.set("fontWeight", "normal");
+    }
+    canvas.renderAll();
+  };
+
+  const handleImageFillChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImageFill(e.target.checked);
+    if (e.target.checked && selectedObject && type === 'image') {
+      selectedObject.set({
+        scaleX: canvas.width / selectedObject.width,
+        scaleY: canvas.height / selectedObject.height,
+        objectFit: 'contain'
+      });
+    } else if (selectedObject && type === 'image') {
+      selectedObject.set({
+        scaleX: 1,
+        scaleY: 1,
+        objectFit: 'none'
+      });
     }
     canvas.renderAll();
   };
@@ -313,6 +338,18 @@ const Config = ({
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {type === 'image' && (
+              <div className="flex items-center justify-between">
+                <span>Image Fill</span>
+                <input
+                  type="checkbox"
+                  className="w-5 h-5"
+                  checked={imageFill}
+                  onChange={handleImageFillChange}
+                />
               </div>
             )}
           </div>
