@@ -3,7 +3,7 @@ import { RxHeight, RxWidth, RxColorWheel, RxShadow } from "react-icons/rx";
 import { LuDiameter, LuTrash } from "react-icons/lu";
 import { FaBold, FaItalic } from "react-icons/fa";
 import { RiFontFamily } from "react-icons/ri";
-import Slider from "@/components/ui/Slider";
+import Slider from "@/shared/ui/Slider";
 
 type Shadow = {
   color: string;
