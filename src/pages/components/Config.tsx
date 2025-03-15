@@ -83,7 +83,7 @@ const Config = ({
       if (type === "image") {
         setImageFill(
           selectedObject.scaleX === canvas.width / selectedObject.width &&
-          selectedObject.scaleY === canvas.height / selectedObject.height
+            selectedObject.scaleY === canvas.height / selectedObject.height
         );
       }
     }
@@ -119,17 +119,17 @@ const Config = ({
 
   const handleImageFillChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setImageFill(e.target.checked);
-    if (e.target.checked && selectedObject && type === 'image') {
+    if (e.target.checked && selectedObject && type === "image") {
       selectedObject.set({
         scaleX: canvas.width / selectedObject.width,
         scaleY: canvas.height / selectedObject.height,
-        objectFit: 'contain'
+        objectFit: "contain",
       });
-    } else if (selectedObject && type === 'image') {
+    } else if (selectedObject && type === "image") {
       selectedObject.set({
         scaleX: 1,
         scaleY: 1,
-        objectFit: 'none'
+        objectFit: "none",
       });
     }
     canvas.renderAll();
@@ -279,6 +279,7 @@ const Config = ({
                 <div className="flex items-center justify-between">
                   <label>Font Family</label>
                   <select
+                  value={fontFamily}
                     onChange={(e) => setFontFamily(e.target.value)}
                     className="text-black"
                   >
@@ -293,6 +294,12 @@ const Config = ({
                       "Garamond",
                       "Courier New",
                       "Brush Script MT",
+                      "Open Sans",
+                      "Noto Sans",
+                      "Raleway",
+                      "Roboto",
+                      "Merriweather",
+                      "Permanent Marker"
                     ].map((font) => (
                       <option key={font} value={font}>
                         {font}
@@ -341,7 +348,7 @@ const Config = ({
               </div>
             )}
 
-            {type === 'image' && (
+            {type === "image" && (
               <div className="flex items-center justify-between">
                 <span>Image Fill</span>
                 <input

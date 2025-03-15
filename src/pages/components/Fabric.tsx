@@ -147,13 +147,16 @@ const Fabric = () => {
     <div className="flex flex-col">
       <div className="flex justify-between">
         <Controls canvas={canvas} />
-        <div
-          className="flex justify-center items-center bg-gray-800 mb-5 rounded w-fit text-white px-5 py-1 cursor-pointer"
-          onClick={handleDownload}
-        >
-          <MdDownload size={20} />
-          <span className="ml-2">Download</span>
-        </div>
+
+        <span className="text-3xl">Visualize it</span>
+          <button
+            className="flex justify-center items-center bg-gray-800 mb-5 rounded w-fit text-white px-5 py-1"
+            onClick={handleDownload}
+            disabled={shapes.length > 0 ? false : true}
+          >
+            <MdDownload size={20} />
+            <span className="ml-2">Download</span>
+          </button>
       </div>
 
       <div className="flex gap-10">
